@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="night">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BORINGPOOL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="machine" aria-label="BORINGPOOL LCD pool minigame">
+    <header class="machine-top" aria-label="Device header">
+      <div class="brand-mark">BORINGPOOL</div>
+    </header>
+
+    <section class="hud" aria-label="Game panel">
+      <div class="hud-card big"><span>XP RUN</span><strong id="scoreLabel">000000</strong></div>
+      <div class="hud-card"><span>LV</span><strong id="levelLabel">01</strong></div>
+      <div class="hud-card big"><span>BEST</span><strong id="bestLabel">000000</strong></div>
+      <div class="hud-card"><span>BALLS</span><strong id="ballsLeftLabel">15</strong></div>
+      <div class="hud-card"><span>SHOTS</span><strong id="shotsLabel">00</strong></div>
+    </section>
+
+    <section class="screen-shell" aria-label="LCD game screen">
+      <div class="screen-bezel">
+        <canvas id="gameCanvas" width="960" height="540" aria-label="Pool table on Canvas"></canvas>
+      </div>
+    </section>
+
+    <section class="controls" aria-label="Controls">
+      <p><strong>PLAY:</strong> aim with the mouse. Click to lock aim, drag to set power, and release. Aim does not invert; the ball only drops when it truly enters the pocket. The 8 is always last.</p>
+      <div class="button-row">
+        <button id="newGameBtn" type="button">NEW RACK</button>
+        <button id="cueBtn" type="button">CUE PLACE 2</button>
+        <button id="themeBtn" type="button">LCD: NIGHT</button>
+      </div>
+    </section>
+
+    <section id="menuOverlay" class="lcd-overlay" aria-label="BORINGPOOL menu">
+      <div id="startPanel" class="lcd-panel menu-panel" role="dialog" aria-label="Start menu">
+        <h1>BORINGPOOL</h1>
+        <p class="subtitle">LCD 8-BIT POOL</p>
+        <div class="menu-summary" aria-label="Saved progress summary">
+          <span>BEST <strong id="startBestLabel">000000</strong></span>
+          <span>RACKS <strong id="startRacksLabel">0000</strong></span>
+        </div>
+        <div class="menu-actions">
+          <button id="startBtn" type="button">START</button>
+          <button id="statsBtn" type="button">STATS</button>
+          <button id="achievementsBtn" type="button">ACHIEVEMENTS</button>
+          <button id="soundBtn" type="button">SOUND ON</button>
+          <button id="menuThemeBtn" type="button">LCD: NIGHT</button>
+        </div>
+      </div>
+
+      <div id="statsPanel" class="lcd-panel menu-panel compact-panel" role="dialog" aria-label="Statistics" hidden>
+        <h2>STATS</h2>
+        <div id="statsList" class="lcd-list"></div>
+        <div class="menu-actions single-row">
+          <button id="statsBackBtn" type="button">BACK</button>
+        </div>
+      </div>
+
+      <div id="achievementsPanel" class="lcd-panel menu-panel compact-panel" role="dialog" aria-label="Achievements" hidden>
+        <h2>ACHIEVEMENTS</h2>
+        <div id="achievementsList" class="lcd-list achievements-list"></div>
+        <div class="menu-actions single-row">
+          <button id="achievementsBackBtn" type="button">BACK</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="game.js"></script>
+</body>
+</html>
