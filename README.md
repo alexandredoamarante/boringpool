@@ -1,75 +1,95 @@
 # BORINGPOOL
 
-**BORINGPOOL** é um jogo de sinuca em HTML5 Canvas com visual LCD monocromático refletivo, inspirado em minigames antigos/Brick Game, com física estável e polimento final de produto.
+https://alexandredoamarante.github.io/boringpool/
 
-## Como rodar
+**BORINGPOOL** is a retro LCD-style 8-ball pool game for your browser.
 
-1. Extraia o ZIP.
-2. Abra `index.html` diretamente no navegador.
-3. Na tela inicial, clique em `START`.
-4. Mire com o mouse. Clique para travar a mira, arraste para definir a força e solte.
+Aim, shoot, pocket the balls, earn XP, and leave the 8 ball for last.
 
-Não precisa instalar nada, não precisa de servidor e não usa dependências externas.
+No install needed. Open `index.html` and play.
 
-## Controles
+---
 
-- Mouse: mirar.
-- Clique + arraste: definir força da tacada.
-- Soltar: tacar.
-- `NEW RACK`: reinicia a mesa.
-- `CUE PLACE`: reposiciona a bola branca, limitado a 2 usos por rack.
-- `LCD`: alterna a paleta monocromática.
-- `SOUND ON/OFF`: liga/desliga sons 8-bit.
+## How to Play
 
-## Regras principais
+1. Press **START**.
+2. Move the mouse to aim.
+3. Click to lock your aim.
+4. Drag back to choose the shot power.
+5. Release to shoot.
+6. Pocket all balls.
+7. Pocket the **8 ball last**.
 
-- A bola 8 é sempre a última.
-- Se a bola 8 cair antes da hora, ela volta para a mesa e gera penalidade.
-- Combo só aparece quando 2 ou mais bolas caem na mesma tacada.
-- A bola branca encaçapada gera penalidade de XP.
-- As caçapas mantêm a física estável da versão final: sem sucção, sem raio escondido e com encaçapamento pelo contato real com o buraco preto visual.
+---
 
-## Recursos finais
+## Controls
 
-- Tela inicial em estilo LCD.
-- Branding final: `BORINGPOOL`.
-- Sons 8-bit de sinuca via Web Audio API, sem arquivos de áudio externos.
-- Estatísticas salvas no navegador:
-  - BEST XP
-  - RACKS CLEARED
-  - TOTAL POTS
-  - TOTAL SHOTS
-  - CUE FOULS
-  - 8 BALL FINISHES
-  - BEST STREAK
-  - BEST COMBO
-  - FEWEST SHOTS CLEAR
-  - BANK SHOTS
-  - TOTAL PLAY TIME
-- Conquistas salvas no navegador:
-  - FIRST RACK
-  - NO FOUL
-  - BANK SHOT
-  - COMBO x2
-  - 8 BALL FINISH
-  - PERFECT RACK
-  - 10K XP
-  - CUE MASTER
-  - SHARPSHOOTER
-  - LONG RUN
-- Preferências salvas:
-  - melhor pontuação;
-  - tema LCD;
-  - som ligado/desligado;
-  - estatísticas;
-  - conquistas.
+* **Mouse move**: aim
+* **Click + drag**: set power
+* **Release**: shoot
+* **NEW RACK**: restart the table
+* **CUE PLACE**: move the cue ball
+* **LCD**: change the screen color
+* **SOUND ON/OFF**: turn sound on or off
 
-## Arquivos
+You can use **CUE PLACE** only **2 times per rack**.
 
-- `index.html`: estrutura da página, HUD, tela inicial, stats e conquistas.
-- `style.css`: visual do console, temas LCD, scanlines, responsividade e painéis finais.
-- `game.js`: Canvas, física, mira, regras, sons, estatísticas, conquistas e salvamento local.
+---
 
-## Observações da versão final
+## Main Rule
 
-Esta versão preserva a jogabilidade e física já estabilizadas. O polimento adicionado é focado em experiência de produto: start screen, áudio opcional, estatísticas, conquistas e progresso salvo.
+The **8 ball must be the last ball pocketed**.
+
+If you pocket the 8 ball too early, it comes back to the table and you lose XP.
+
+---
+
+## XP and Score
+
+You gain XP by:
+
+* pocketing balls;
+* making clean shots;
+* pocketing multiple balls in one shot;
+* clearing the rack;
+* finishing correctly with the 8 ball.
+
+You lose XP when:
+
+* the cue ball is pocketed;
+* the 8 ball is hit or pocketed too early;
+* you miss badly or make an illegal shot.
+
+A **combo** only appears when you pocket **2 or more balls in one shot**.
+
+---
+
+## Menu
+
+From the start screen you can open:
+
+* **START**: play the game
+* **STATS**: see your saved progress
+* **ACHIEVEMENTS**: see unlocked achievements
+* **SOUND ON/OFF**: toggle sound
+* **LCD**: change the visual theme
+
+---
+
+## Saved Progress
+
+The game saves in your browser:
+
+* best score;
+* stats;
+* achievements;
+* sound setting;
+* LCD theme.
+
+If you clear your browser data, your progress may be reset.
+
+---
+
+
+Simple to play. Easy to restart. Hard to stop.
+::: 
