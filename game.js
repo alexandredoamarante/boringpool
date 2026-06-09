@@ -76,7 +76,11 @@
     { id: 'classic', label: 'CLASSIC' },
     { id: 'brick', label: 'BRICK' },
     { id: 'pocket', label: 'POCKET' },
-    { id: 'night', label: 'NIGHT' }
+    { id: 'night', label: 'NIGHT' },
+    { id: 'amber', label: 'AMBER' },
+    { id: 'blue', label: 'BLUE' },
+    { id: 'contrast', label: 'CONTRAST' },
+    { id: 'pocket-dark', label: 'POCKET DARK' }
   ];
 
   const DEFAULT_STATS = {
@@ -139,6 +143,7 @@
   let message = 'AIM AND DRAG POWER';
   let messageUntil = performance.now() + 2200;
   let floatingMessages = [];
+  let pocketEffects = [];
   let currentShot = null;
   let eightNeedsRespawn = false;
   let earlyEightBall = null;
@@ -150,6 +155,7 @@
   let playTimeMark = performance.now();
   let lastStatsFlush = performance.now();
   let achievementToast = null;
+  let cueRecoil = 0;
   let audioEnabled = storageGet(STORAGE.sound, 'on') !== 'off';
   let audioCtx = null;
   const lastSoundAt = Object.create(null);
@@ -569,6 +575,7 @@
     pointer.pull = 0;
     pointer.displayPull = 0;
     floatingMessages = [];
+    pocketEffects = [];
 
     if (resetAll) {
       shots = 0;
@@ -851,6 +858,7 @@
       saveStats();
       playSound('cue', pull / CONFIG.maxPull, true);
       shotInProgress = true;
+      cueRecoil = 15;
       showMessage('SHOT!', 750);
     } else if (!ballsAreMoving()) {
       showMessage('DRAG MORE', 850);
@@ -1198,6 +1206,9 @@
       banks: Math.min(ball.railHits, 5),
       pocketType: pocket ? pocket.type : 'open'
     });
+    if (pocket) {
+      pocketEffects.push({ x: pocket.x, y: pocket.y, start: performance.now(), duration: 500 });
+    }
     addFloat(`+${ball.number}`, pocket ? pocket.x : ball.x, pocket ? pocket.y : ball.y, 1200);
   }
 
@@ -1414,6 +1425,9 @@
     }
 
     floatingMessages = floatingMessages.filter((item) => now - item.start < item.duration);
+    pocketEffects = pocketEffects.filter((item) => now - item.start < item.duration);
+    if (cueRecoil > 0.1) cueRecoil *= 0.82;
+    else cueRecoil = 0;
 
     if (!ballsAreMoving()) {
       if (shotInProgress) {
@@ -1673,14 +1687,24 @@
     ctx.save();
 
     ctx.globalAlpha = 0.92;
-    ctx.setLineDash([9, 9]);
-    ctx.lineWidth = 3;
+    ctx.setLineDash([4, 4]);
+    ctx.lineWidth = 2;
     ctx.strokeStyle = LCD.dark;
     ctx.beginPath();
     ctx.moveTo(cue.x + nx * 20, cue.y + ny * 20);
     ctx.lineTo(cue.x + nx * aimLength, cue.y + ny * aimLength);
     ctx.stroke();
     ctx.setLineDash([]);
+
+    // Pulsing highlight around the cue ball
+    const pulse = Math.sin(performance.now() / 200) * 2.5;
+    ctx.beginPath();
+    ctx.arc(cue.x, cue.y, cue.r + 6 + pulse, 0, Math.PI * 2);
+    ctx.strokeStyle = LCD.dark;
+    ctx.lineWidth = 2;
+    ctx.globalAlpha = 0.3 + Math.sin(performance.now() / 200) * 0.15;
+    ctx.stroke();
+    ctx.globalAlpha = 1;
 
     ctx.fillStyle = LCD.dark;
     for (let i = 42; i <= Math.min(178, aimLength); i += 26) {
@@ -1748,9 +1772,23 @@
     }
 
     // The cue stays behind the white ball, on the opposite side of the shot direction.
-    const cueTip = 22 + (pointer.down ? Math.sin(performance.now() / 95) * 0.7 : 0);
-    const cueBack = 88 + pull * 0.74;
+    const cueTip = 22 + (pointer.down ? Math.sin(performance.now() / 95) * 0.7 : 0) - cueRecoil;
+    const cueBack = 88 + pull * 0.74 - cueRecoil;
     ctx.lineCap = 'square';
+
+    // Power notches along the cue stick
+    if (pointer.down && pull > 10) {
+      ctx.save();
+      ctx.globalAlpha = 0.4;
+      ctx.fillStyle = LCD.dark;
+      for (let p = 40; p <= pull * 0.74 + 60; p += 15) {
+        const notchX = cue.x - nx * (cueTip + p);
+        const notchY = cue.y - ny * (cueTip + p);
+        ctx.fillRect(notchX - 2, notchY - 2, 4, 4);
+      }
+      ctx.restore();
+    }
+
     ctx.globalAlpha = 0.22;
     ctx.lineWidth = pointer.down ? 13 : 10;
     ctx.strokeStyle = LCD.dark;
@@ -1826,6 +1864,22 @@
     ctx.restore();
   }
 
+  function drawPocketEffects() {
+    const now = performance.now();
+    ctx.save();
+    for (const item of pocketEffects) {
+      const age = now - item.start;
+      const t = age / item.duration;
+      ctx.globalAlpha = 1 - t;
+      ctx.strokeStyle = LCD.dark;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(item.x, item.y, CONFIG.pocketRadius * 0.4 + t * 40, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
 
   function drawAchievementToast() {
     if (!achievementToast) return;
@@ -1887,6 +1941,7 @@
     }
 
     drawPocketedPanel();
+    drawPocketEffects();
     drawFloatingMessages();
     drawMessage();
     drawAchievementToast();
