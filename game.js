@@ -1495,19 +1495,6 @@
     ctx.strokeStyle = LCD.dark;
     ctx.strokeRect(play.x, play.y, play.w, play.h);
 
-    ctx.setLineDash([7, 8]);
-    ctx.lineWidth = 2;
-    ctx.strokeRect(play.x + 22, play.y + 22, play.w - 44, play.h - 44);
-    ctx.setLineDash([]);
-
-    ctx.fillStyle = LCD.dark;
-    ctx.fillRect(play.x + play.w * 0.25 - 1, play.y + 18, 2, play.h - 36);
-    ctx.beginPath();
-    ctx.arc(play.x + play.w * 0.25, play.y + play.h * 0.5, 54, -Math.PI / 2, Math.PI / 2);
-    ctx.strokeStyle = LCD.dark;
-    ctx.lineWidth = 2;
-    ctx.stroke();
-
     for (const pocket of pockets) {
       const open = pocket.type === 'side' ? 1.05 : 1;
       ctx.beginPath();
@@ -1525,18 +1512,22 @@
       ctx.fillStyle = LCD.dark;
       ctx.fill();
 
-      // Pixel jaws around the pocket mouth.
-      ctx.fillStyle = LCD.dark;
-      if (pocket.sides.includes('top')) ctx.fillRect(pocket.x - 36, pocket.y + 2, 18, 5), ctx.fillRect(pocket.x + 18, pocket.y + 2, 18, 5);
-      if (pocket.sides.includes('bottom')) ctx.fillRect(pocket.x - 36, pocket.y - 7, 18, 5), ctx.fillRect(pocket.x + 18, pocket.y - 7, 18, 5);
-      if (pocket.sides.includes('left')) ctx.fillRect(pocket.x + 2, pocket.y - 36, 5, 18), ctx.fillRect(pocket.x + 2, pocket.y + 18, 5, 18);
-      if (pocket.sides.includes('right')) ctx.fillRect(pocket.x - 7, pocket.y - 36, 5, 18), ctx.fillRect(pocket.x - 7, pocket.y + 18, 5, 18);
     }
+
+    // Rail diamonds
+    ctx.fillStyle = LCD.dark;
+    [1 / 8, 2 / 8, 3 / 8, 5 / 8, 6 / 8, 7 / 8].forEach(ratio => {
+      ctx.fillRect(play.x + play.w * ratio - 2, table.y + 15, 4, 4);
+      ctx.fillRect(play.x + play.w * ratio - 2, table.y + table.h - 19, 4, 4);
+    });
+    [1 / 4, 1 / 2, 3 / 4].forEach(ratio => {
+      ctx.fillRect(table.x + 15, play.y + play.h * ratio - 2, 4, 4);
+      ctx.fillRect(table.x + table.w - 19, play.y + play.h * ratio - 2, 4, 4);
+    });
 
     drawPixelText(`LV ${String(level).padStart(2, '0')}`, play.x + 12, table.y - 23, 10, 'left');
     drawPixelText(`STREAK ${String(streak).padStart(2, '0')}`, WIDTH / 2, table.y - 23, 10, 'center');
     drawPixelText(`SHOTS ${String(shots).padStart(2, '0')}`, play.x + play.w - 12, table.y - 23, 10, 'right');
-    drawPixelText('AIM / DRAG POWER / RELEASE', WIDTH / 2, table.y + table.h + 30, 10, 'center');
 
     ctx.restore();
   }
